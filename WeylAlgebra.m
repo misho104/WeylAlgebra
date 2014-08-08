@@ -92,6 +92,7 @@ TensorListBox[a___,Tensor[x_,xlow_,{xhigh___,p_Symbol}],Tensor[y_,{p_Symbol,ylow
 TensorListBox[a___,Tensor[x_,{xlow___,OverDot[p_Symbol]},xhigh_],Tensor[y_,ylow_,{OverDot[p_Symbol],yhigh___}],b___,f_]:=TensorListBox[a,Tensor[x,{xlow},xhigh],Tensor[y,ylow,{yhigh}],b,f]
 TensorListBox[obj:RepeatedNull[Tensor[__]],f:StandardForm|TraditionalForm]:=RowBox[Flatten[{"[",MakeBoxes[#,f]&/@{obj},"]"}]]
 
+(*
 TensorListSimplify[a___,b:Tensor[s:(Spinor|SpinorBar)[_],__],c___,d_,e:Tensor[s_,__],f___]:=TensorListSimplify[TensorList[a,b,c,Swap[d,e],f]]
 
 TensorListSimplify[a___,Tensor[Spinor[x_],{p_Symbol},{}],Tensor[Spinor[x_],{q_Symbol},{}],b___]:=Module[{u},u=Unique["\[Alpha]"];TensorListSimplify[TensorList[a,1/2 EpsilonL[p,q],SpinorH[x,u],SpinorL[x,u],b]]]
@@ -106,6 +107,8 @@ TensorListSimplify[a___,b:Tensor[SpinorBar[_],{},{p_}],c:Tensor[SpinorBar[_],{p_
 
 TensorListSimplify[a___]:=TensorList[a]
 TensorListSimplify[a_]:=ReplaceAll[a,TensorList->TensorListSimplify]
+*)
+
 Swap[a:Tensor[(Spinor|SpinorBar)[_],__],b:Tensor[(Spinor|SpinorBar)[_],__]]:=TensorList[-b,a]
 Swap[a:Tensor[_,__],b:Tensor[_,__]]:=TensorList[b,a]
 TensorList[a___,Plus[x_,y__],b___]:=Plus[TensorList[a,x,b],TensorList[a,Plus[y],b]]
