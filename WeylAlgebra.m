@@ -84,6 +84,7 @@ Dx[Times[a_,b__],m_]:=Times[Dx[a,m],b]+Times[a,Dx[Times[b],m]]
 Dx[Tensor[x_,b__],\[Mu]_]:=Tensor[Dx[x,\[Mu]],b]
 Dx[TensorList[a_,b___],\[Mu]_]:=TensorList[Dx[a,\[Mu]],b]+TensorList[a,Dx[TensorList[b],\[Mu]]]
 Dx[z_,\[Mu]_]:=0/;FreeQ[z,x|Pattern|Blank,Infinity]
+Dx[Dx[a_,m_],n_]:=Dx[Dx[a,n],m] /; OrderedQ[{n,m}]
 
 
 TensorList::DuplicatedIndices = "The index `1` duplicated.";
