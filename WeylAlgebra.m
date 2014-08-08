@@ -115,10 +115,16 @@ TensorListSimplify[a_]:=ReplaceAll[a,TensorList->TensorListSimplify]
 
 Swap[a:Tensor[(Spinor|SpinorBar)[_],__],b:Tensor[(Spinor|SpinorBar)[_],__]]:=TensorList[-b,a]
 Swap[a:Tensor[_,__],b:Tensor[_,__]]:=TensorList[b,a]
+SwapToFront[a__,b_]:=TensorList[b,a]*(-1)^Length[Cases[{a},Spinor|SpinorBar,Infinity]]
+
 TensorList[a___,Plus[x_,y__],b___]:=Plus[TensorList[a,x,b],TensorList[a,Plus[y],b]]
 TensorList[a___,Times[x_,y__],b___]:=TensorList[a,x,y,b]
 TensorList[]:=1
 TensorList[a___,x_,b___]:=Times[x,TensorList[a,b]] /; FreeQ[x,Tensor|Pattern|Blanck]
+TensorList[a___,b:Tensor[Sigma[__],{_,x_},_],c__,d:Tensor[_,{},{x_}],e___]:=TensorList[a,b,SwapToFront[c,d],e]
+TensorList[a___,b:Tensor[_,{},{x_}],c__,d:Tensor[Sigma[__],{x_,_},_],e___]:=TensorList[a,b,SwapToFront[c,d],e]
+TensorList[a___,b:Tensor[SigmaBar[__],_,{_,x_}],c__,d:Tensor[_,{x_},{}],e___]:=TensorList[a,b,SwapToFront[c,d],e]
+TensorList[a___,b:Tensor[_,{x_},{}],c__,d:Tensor[SigmaBar[__],_,{x_,_}],e___]:=TensorList[a,b,SwapToFront[c,d],e]
 
 
 
