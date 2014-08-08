@@ -72,6 +72,8 @@ EpsilonL[a_,b_]:=Tensor[Epsilon,{a,b},{}]
 
 Tensor[Times[a:TensorList[___],b___],p___]:=Times[a,Tensor[Times[b],p]]
 Tensor[Plus[a_,b__],p__]:=Plus[Tensor[a,p],Tensor[Plus[b],p]]
+Tensor[s:Times[x_,y__],p__]:=Tensor[Expand[s],p]/;Not[FreeQ[{x,y},Plus]]
+Tensor[Times[a_,b___],p___]:=Times[a,Tensor[Times[b],p]]/;FreeQ[a,Spinor|SpinorBar|Sigma|SigmaBar|Epsilon|Pattern|Blank]
 Spinor[0]:=0
 SpinorBar[0]:=0
 Tensor[0,__]:=0
@@ -81,6 +83,7 @@ Dx[Plus[a_,b__],m_]:=Plus[Dx[a,m],Dx[Plus[b],m]]
 Dx[Times[a_,b__],m_]:=Times[Dx[a,m],b]+Times[a,Dx[Times[b],m]]
 Dx[Tensor[x_,b__],\[Mu]_]:=Tensor[Dx[x,\[Mu]],b]
 Dx[TensorList[a_,b___],\[Mu]_]:=TensorList[Dx[a,\[Mu]],b]+TensorList[a,Dx[TensorList[b],\[Mu]]]
+Dx[z_,\[Mu]_]:=0/;FreeQ[z,x|Pattern|Blank,Infinity]
 
 
 TensorList::DuplicatedIndices = "The index `1` duplicated.";
@@ -114,6 +117,7 @@ Swap[a:Tensor[_,__],b:Tensor[_,__]]:=TensorList[b,a]
 TensorList[a___,Plus[x_,y__],b___]:=Plus[TensorList[a,x,b],TensorList[a,Plus[y],b]]
 TensorList[a___,Times[x_,y__],b___]:=TensorList[a,x,y,b]
 TensorList[]:=1
+TensorList[a___,x_,b___]:=Times[x,TensorList[a,b]] /; FreeQ[x,Tensor|Pattern|Blanck]
 
 
 
@@ -149,15 +153,6 @@ Renumbering[exp_]:=Module[{\[Mu]s,\[Alpha]s,\[Beta]s,list,GetAlphas,GetMus},
 ]//Total
 
 
-Dx[z_,\[Mu]_]:=0/;FreeQ[z,x|Pattern|Blank,Infinity]
-Tensor[s:Times[x_,y__],p__]:=Tensor[Expand[s],p]/;Not[FreeQ[{x,y},Plus]]
-Tensor[Times[a_,b___],p___]:=Times[a,Tensor[Times[b],p]]/;FreeQ[a,Spinor|SpinorBar|Sigma|SigmaBar|Epsilon|Pattern|Blank]
-TensorList[a___,x_,b___]:=Times[x,TensorList[a,b]] /; FreeQ[x,Tensor|Pattern|Blanck]
-(*
-TensorList[a__,x_,b___]:=Times[x,TensorList[a,b]] /; FreeQ[x,Tensor]
-TensorList[x_,b__]:=Times[x,TensorList[b]] /; FreeQ[x,Tensor]
-TensorList[x_]:=x /; FreeQ[x,Tensor]
-*)
 SetAttributes[TensorList,Flat]
 Protect[SubsuperscriptBoxSub,SpinorL,SpinorH,SpinorBarL,SpinorBarH,SigmaL,SigmaH,SigmaBarL,SigmaBarH,EpsilonH,EpsilonL,Tensor,Spinor,SpinorBar,Sigma,SigmaBar,Epsilon,\[Sigma],\[Epsilon],x,TensorList,TensorListBox,TensorListSimplify,SpinorToH,Dx];
 
